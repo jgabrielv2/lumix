@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+
 
 @Entity
 public class Video {
@@ -22,8 +24,14 @@ public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @NotBlank
     private String titulo;
+
+    @NotBlank
     private String descricao;
+
+    @NotBlank
     private String url;
     private Boolean ativo;
 
