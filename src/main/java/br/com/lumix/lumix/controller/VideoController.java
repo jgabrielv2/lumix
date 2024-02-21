@@ -35,19 +35,19 @@ public class VideoController {
     }
 
 
-    @GetMapping("{/id}")
+    @GetMapping("/{id}")
     public ResponseEntity<DadosListagemVideo> listarPorId(@PathVariable Long id) {
         var video = videoService.findById(id);
         return ResponseEntity.ok(video);
     }
 
-    @PutMapping("{/id}")
+    @PutMapping("/{id}")
     public ResponseEntity<DadosListagemVideo> atualizar(@PathVariable Long id, @RequestBody DadosAtualizacaoVideo dadosAtualizacaoVideo) {
         var video = videoService.update(id, dadosAtualizacaoVideo);
         return ResponseEntity.ok(video);
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id){
         videoService.delete(id);
         return ResponseEntity.noContent().build();
