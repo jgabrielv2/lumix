@@ -2,33 +2,12 @@ package br.com.lumix.lumix.dto.read;
 
 import br.com.lumix.lumix.entity.Video;
 
-public class DadosListagemVideo {
+
+public record DadosListagemVideo(Long id, String titulo, String descricao, String url) {
 
     public DadosListagemVideo(Video video){
-        this.id = video.id();
-        this.titulo = video.titulo();
-        this.descricao = video.descricao();
-        this.url = video.url();
+        this(video.id(), video.titulo(), video.descricao(), video.url());
     }
 
-    private final Long id;
-    private final String titulo;
-    private final String descricao;
-    private final String url;
-
-    public Long id() {
-        return id;
-    }
-
-    public String titulo() {
-        return titulo;
-    }
-
-    public String descricao() {
-        return descricao;
-    }
-
-    public String url() {
-        return url;
-    }
 }
+
