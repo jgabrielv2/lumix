@@ -15,7 +15,8 @@ public class Video {
     public Video(DadosCriacaoVideo dadosCriacaoVideo) {
         this.setTitulo(dadosCriacaoVideo.titulo())
                 .setDescricao(dadosCriacaoVideo.descricao())
-                .setUrl(dadosCriacaoVideo.url());
+                .setUrl(dadosCriacaoVideo.url())
+                .setAtivo(true);
     }
 
     @Id
@@ -24,6 +25,7 @@ public class Video {
     private String titulo;
     private String descricao;
     private String url;
+    private Boolean ativo;
 
     public long id() {
         return id;
@@ -59,5 +61,13 @@ public class Video {
     public Video setUrl(String url) {
         this.url = url;
         return this;
+    }
+
+    public Boolean isAtivo(){
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 }
