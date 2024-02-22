@@ -27,7 +27,7 @@ public class VideoService {
     }
 
     public List<DadosListagemVideo> findAll() {
-        return videoRepository.findAll().stream().map(DadosListagemVideo::new).toList();
+        return videoRepository.findAllByAtivoTrue().stream().map(DadosListagemVideo::new).toList();
     }
 
     public DadosListagemVideo findById(Long id) {
