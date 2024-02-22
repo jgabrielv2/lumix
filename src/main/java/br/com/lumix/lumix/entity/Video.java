@@ -25,13 +25,13 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank
+    @NotBlank(message = "O título deve ser preenchido")
     private String titulo;
 
-    @NotBlank
+    @NotBlank(message = "A descrição deve ser preenchida")
     private String descricao;
 
-    @NotBlank
+    @NotBlank(message = "A URL deve ser preenchida")
     private String url;
     private Boolean ativo;
 

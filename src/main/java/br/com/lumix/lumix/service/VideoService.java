@@ -37,7 +37,7 @@ public class VideoService {
 
     @Transactional
     public DadosListagemVideo update(Long id, DadosAtualizacaoVideo dadosAtualizacaoVideo) {
-        var video = videoRepository.getReferenceById(id);
+        var video = buscarVideoPorId(id);
 
         // ao avaliar a expressao booleana, se for verdadeira, o codigo
         // apos o ? será executado. Caso contrario, o codigo apos o : será executado

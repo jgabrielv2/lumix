@@ -4,6 +4,7 @@ import br.com.lumix.lumix.dto.create.DadosCriacaoVideo;
 import br.com.lumix.lumix.dto.read.DadosListagemVideo;
 import br.com.lumix.lumix.dto.update.DadosAtualizacaoVideo;
 import br.com.lumix.lumix.service.VideoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -21,7 +22,7 @@ public class VideoController {
     }
 
     @PostMapping
-    public ResponseEntity<DadosListagemVideo> salvar(@RequestBody DadosCriacaoVideo dadosCriacaoVideo, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<DadosListagemVideo> salvar(@Valid @RequestBody DadosCriacaoVideo dadosCriacaoVideo, UriComponentsBuilder uriComponentsBuilder) {
         var video = videoService.create(dadosCriacaoVideo);
         var uri = uriComponentsBuilder.path("/videos/{id}")
                 .buildAndExpand(video.id()).toUri();
