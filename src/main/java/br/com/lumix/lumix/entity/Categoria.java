@@ -2,6 +2,7 @@ package br.com.lumix.lumix.entity;
 
 import br.com.lumix.lumix.dto.create.DadosCriacaoCategoria;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Categoria {
@@ -17,8 +18,10 @@ public class Categoria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "O título é obrigatório")
     private String titulo;
 
+    @NotBlank(message = "A cor é obrigatória")
     private String cor;
 
     private Boolean ativo;

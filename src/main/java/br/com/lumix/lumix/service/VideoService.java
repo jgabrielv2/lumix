@@ -6,28 +6,30 @@ import br.com.lumix.lumix.dto.update.DadosAtualizacaoVideo;
 import br.com.lumix.lumix.entity.Video;
 import br.com.lumix.lumix.exception.VideoNotFoundException;
 import br.com.lumix.lumix.repository.VideoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 
 @Service
 public class VideoService {
 
-    private final VideoRepository videoRepository;
+    private final VideoRepository repository;
 
-    public VideoService(VideoRepository videoRepository) {
-        this.videoRepository = videoRepository;
+    public VideoService(VideoRepository repository) {
+        this.repository = repository;
     }
 
+    @Transactional
     public DadosListagemVideo create(DadosCriacaoVideo dadosCriacaoVideo) {
         Video video = new Video(dadosCriacaoVideo);
-        videoRepository.save(video);
+        repository.save(video);
         return new DadosListagemVideo(video);
     }
 
     public List<DadosListagemVideo> findAll() {
-        return videoRepository.findAllByAtivoTrue().stream().map(DadosListagemVideo::new).toList();
+        return repository.findAllByAtivoTrue().stream().map(DadosListagemVideo::new).toList();
     }
 
     public DadosListagemVideo findById(Long id) {
@@ -44,17 +46,17 @@ public class VideoService {
         video.setTitulo(dadosAtualizacaoVideo.titulo() != null ? dadosAtualizacaoVideo.titulo() : video.titulo());
         video.setDescricao(dadosAtualizacaoVideo.descricao() != null ? dadosAtualizacaoVideo.descricao() : video.descricao());
         video.setUrl(dadosAtualizacaoVideo.url() != null ? dadosAtualizacaoVideo.url() : video.url());
-        videoRepository.save(video);
+        repository.save(video);
         return new DadosListagemVideo(video);
     }
 
     public void delete(Long id) {
         var video = buscarVideoPorId(id);
         video.setAtivo(false);
-        videoRepository.save(video);
+        repository.save(video);
     }
 
     private Video buscarVideoPorId(Long id) {
-        return videoRepository.findById(id).orElseThrow(() -> new VideoNotFoundException("Não encontrado"));
+        return repository.findById(id).orElseThrow(() -> new VideoNotFoundException("Não encontrado"));
     }
 }
