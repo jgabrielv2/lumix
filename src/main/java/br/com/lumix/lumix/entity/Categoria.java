@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@Table(name = "categorias")
 public class Categoria {
 
     public Categoria(){}

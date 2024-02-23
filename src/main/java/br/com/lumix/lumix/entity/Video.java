@@ -1,24 +1,14 @@
 package br.com.lumix.lumix.entity;
 
-import br.com.lumix.lumix.dto.create.DadosCriacaoVideo;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 
 @Entity
+@Table(name = "videos")
 public class Video {
 
     public Video() {
-    }
-
-    public Video(DadosCriacaoVideo dadosCriacaoVideo) {
-        this.setTitulo(dadosCriacaoVideo.titulo())
-                .setDescricao(dadosCriacaoVideo.descricao())
-                .setUrl(dadosCriacaoVideo.url())
-                .setAtivo(true);
     }
 
     @Id
@@ -34,6 +24,24 @@ public class Video {
     @NotBlank(message = "A URL deve ser preenchida")
     private String url;
     private Boolean ativo;
+
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public Categoria categoria() {
+        return categoria;
+    }
+
+    public Video setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+        return this;
+    }
 
     public long id() {
         return id;
@@ -71,7 +79,7 @@ public class Video {
         return this;
     }
 
-    public Boolean isAtivo(){
+    public Boolean isAtivo() {
         return ativo;
     }
 

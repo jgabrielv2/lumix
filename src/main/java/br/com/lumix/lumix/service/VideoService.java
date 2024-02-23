@@ -4,7 +4,9 @@ import br.com.lumix.lumix.dto.create.DadosCriacaoVideo;
 import br.com.lumix.lumix.dto.read.DadosListagemVideo;
 import br.com.lumix.lumix.dto.update.DadosAtualizacaoVideo;
 import br.com.lumix.lumix.entity.Video;
+import br.com.lumix.lumix.exception.CategoriaNotFoundException;
 import br.com.lumix.lumix.exception.VideoNotFoundException;
+import br.com.lumix.lumix.repository.CategoriaRepository;
 import br.com.lumix.lumix.repository.VideoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -15,21 +17,30 @@ import java.util.List;
 @Service
 public class VideoService {
 
-    private final VideoRepository repository;
+    private final VideoRepository videoRepository;
+    private final CategoriaRepository categoriaRepository;
 
-    public VideoService(VideoRepository repository) {
-        this.repository = repository;
+    public VideoService(VideoRepository repository, CategoriaRepository categoriaRepository) {
+        this.categoriaRepository = categoriaRepository;
+        this.videoRepository = repository;
     }
 
     @Transactional
     public DadosListagemVideo create(DadosCriacaoVideo dadosCriacaoVideo) {
-        Video video = new Video(dadosCriacaoVideo);
-        repository.save(video);
+        var categoria = categoriaRepository.findById(dadosCriacaoVideo.categoriaId()).orElseThrow(()
+                -> new CategoriaNotFoundException("Categoria não encontrada"));
+        var video = new Video();
+        video.setCategoria(categoria)
+                .setTitulo(dadosCriacaoVideo.titulo())
+                .setDescricao(dadosCriacaoVideo.descricao())
+                .setUrl(dadosCriacaoVideo.url())
+                .setAtivo(true);
+        videoRepository.save(video);
         return new DadosListagemVideo(video);
     }
 
     public List<DadosListagemVideo> findAll() {
-        return repository.findAllByAtivoTrue().stream().map(DadosListagemVideo::new).toList();
+        return videoRepository.findAllByAtivoTrue().stream().map(DadosListagemVideo::new).toList();
     }
 
     public DadosListagemVideo findById(Long id) {
@@ -43,20 +54,21 @@ public class VideoService {
 
         // ao avaliar a expressao booleana, se for verdadeira, o codigo
         // apos o ? será executado. Caso contrario, o codigo apos o : será executado
+ //       video.setCategoria(dadosAtualizacaoVideo.categoriaId()!= null ? dadosAtualizacaoVideo.categoriaId())
         video.setTitulo(dadosAtualizacaoVideo.titulo() != null ? dadosAtualizacaoVideo.titulo() : video.titulo());
         video.setDescricao(dadosAtualizacaoVideo.descricao() != null ? dadosAtualizacaoVideo.descricao() : video.descricao());
         video.setUrl(dadosAtualizacaoVideo.url() != null ? dadosAtualizacaoVideo.url() : video.url());
-        repository.save(video);
+        videoRepository.save(video);
         return new DadosListagemVideo(video);
     }
 
     public void delete(Long id) {
         var video = buscarVideoPorId(id);
         video.setAtivo(false);
-        repository.save(video);
+        videoRepository.save(video);
     }
 
     private Video buscarVideoPorId(Long id) {
-        return repository.findByIdAndAtivoTrue(id).orElseThrow(() -> new VideoNotFoundException("Não encontrado"));
+        return videoRepository.findByIdAndAtivoTrue(id).orElseThrow(() -> new VideoNotFoundException("Não encontrado"));
     }
 }

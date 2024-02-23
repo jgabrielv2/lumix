@@ -1,4 +1,4 @@
 package br.com.lumix.lumix.dto.update;
 
-public record DadosAtualizacaoVideo(String titulo, String descricao, String url) {
+public record DadosAtualizacaoVideo(Long categoriaId, String titulo, String descricao, String url) {
 }
