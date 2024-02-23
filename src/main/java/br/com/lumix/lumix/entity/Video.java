@@ -34,16 +34,13 @@ public class Video {
         return categoria;
     }
 
-    public Categoria categoria() {
-        return categoria;
-    }
 
     public Video setCategoria(Categoria categoria) {
         this.categoria = categoria;
         return this;
     }
 
-    public long id() {
+    public long getId() {
         return id;
     }
 
@@ -52,7 +49,7 @@ public class Video {
         return this;
     }
 
-    public String titulo() {
+    public String getTitulo() {
         return titulo;
     }
 
@@ -61,7 +58,7 @@ public class Video {
         return this;
     }
 
-    public String descricao() {
+    public String getDescricao() {
         return descricao;
     }
 
@@ -70,7 +67,7 @@ public class Video {
         return this;
     }
 
-    public String url() {
+    public String getUrl() {
         return url;
     }
 

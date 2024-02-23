@@ -3,6 +3,7 @@ package br.com.lumix.lumix.service;
 import br.com.lumix.lumix.dto.create.DadosCriacaoVideo;
 import br.com.lumix.lumix.dto.read.DadosListagemVideo;
 import br.com.lumix.lumix.dto.update.DadosAtualizacaoVideo;
+import br.com.lumix.lumix.entity.Categoria;
 import br.com.lumix.lumix.entity.Video;
 import br.com.lumix.lumix.exception.CategoriaNotFoundException;
 import br.com.lumix.lumix.exception.VideoNotFoundException;
@@ -27,8 +28,11 @@ public class VideoService {
 
     @Transactional
     public DadosListagemVideo create(DadosCriacaoVideo dadosCriacaoVideo) {
-        var categoria = categoriaRepository.findById(dadosCriacaoVideo.categoriaId()).orElseThrow(()
-                -> new CategoriaNotFoundException("Categoria não encontrada"));
+        var categoriaId = dadosCriacaoVideo.categoriaId();
+        if (categoriaId == null) {
+            categoriaId = 1L;
+        }
+        var categoria = buscarCategoriaPorId(categoriaId);
         var video = new Video();
         video.setCategoria(categoria)
                 .setTitulo(dadosCriacaoVideo.titulo())
@@ -51,13 +55,13 @@ public class VideoService {
     @Transactional
     public DadosListagemVideo update(Long id, DadosAtualizacaoVideo dadosAtualizacaoVideo) {
         var video = buscarVideoPorId(id);
-
+        var categoria = buscarCategoriaPorId(dadosAtualizacaoVideo.categoriaId());
         // ao avaliar a expressao booleana, se for verdadeira, o codigo
         // apos o ? será executado. Caso contrario, o codigo apos o : será executado
- //       video.setCategoria(dadosAtualizacaoVideo.categoriaId()!= null ? dadosAtualizacaoVideo.categoriaId())
-        video.setTitulo(dadosAtualizacaoVideo.titulo() != null ? dadosAtualizacaoVideo.titulo() : video.titulo());
-        video.setDescricao(dadosAtualizacaoVideo.descricao() != null ? dadosAtualizacaoVideo.descricao() : video.descricao());
-        video.setUrl(dadosAtualizacaoVideo.url() != null ? dadosAtualizacaoVideo.url() : video.url());
+        video.setCategoria(categoria != null ? categoria : video.getCategoria());
+        video.setTitulo(dadosAtualizacaoVideo.titulo() != null ? dadosAtualizacaoVideo.titulo() : video.getTitulo());
+        video.setDescricao(dadosAtualizacaoVideo.descricao() != null ? dadosAtualizacaoVideo.descricao() : video.getDescricao());
+        video.setUrl(dadosAtualizacaoVideo.url() != null ? dadosAtualizacaoVideo.url() : video.getUrl());
         videoRepository.save(video);
         return new DadosListagemVideo(video);
     }
@@ -66,6 +70,10 @@ public class VideoService {
         var video = buscarVideoPorId(id);
         video.setAtivo(false);
         videoRepository.save(video);
+    }
+
+    private Categoria buscarCategoriaPorId(Long id) {
+        return categoriaRepository.findByIdAndAtivoTrue(id).orElseThrow(() -> new CategoriaNotFoundException("Não encontrado"));
     }
 
     private Video buscarVideoPorId(Long id) {
