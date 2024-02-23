@@ -55,6 +55,6 @@ public class CategoriaService {
     }
 
     private Categoria buscarCategoriaPorId(Long id) {
-        return repository.findById(id).orElseThrow(() -> new CategoriaNotFoundException("Não encontrado"));
+        return repository.findByIdAndAtivoTrue(id).orElseThrow(() -> new CategoriaNotFoundException("Não encontrado"));
     }
 }

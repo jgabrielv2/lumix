@@ -57,6 +57,6 @@ public class VideoService {
     }
 
     private Video buscarVideoPorId(Long id) {
-        return repository.findById(id).orElseThrow(() -> new VideoNotFoundException("Não encontrado"));
+        return repository.findByIdAndAtivoTrue(id).orElseThrow(() -> new VideoNotFoundException("Não encontrado"));
     }
 }
