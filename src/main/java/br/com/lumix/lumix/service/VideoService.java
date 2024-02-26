@@ -29,9 +29,7 @@ public class VideoService {
     @Transactional
     public DadosListagemVideo create(DadosCriacaoVideo dadosCriacaoVideo) {
         var categoriaId = dadosCriacaoVideo.categoriaId();
-        if (categoriaId == null) {
-            categoriaId = 1L;
-        }
+        if (categoriaId == null) categoriaId = 1L;
         var categoria = buscarCategoriaPorId(categoriaId);
         var video = new Video();
         video.setCategoria(categoria)
@@ -52,6 +50,9 @@ public class VideoService {
         return new DadosListagemVideo(video);
     }
 
+    public List<DadosListagemVideo> findByTituloContainsIgnoreCase (String titulo){
+        return videoRepository.findByTituloContainsIgnoreCase(titulo).stream().map(DadosListagemVideo::new).toList();
+    }
     @Transactional
     public DadosListagemVideo update(Long id, DadosAtualizacaoVideo dadosAtualizacaoVideo) {
         var video = buscarVideoPorId(id);

@@ -13,8 +13,6 @@ import java.util.Set;
 @Table(name = "categorias")
 public class Categoria {
 
-    @OneToMany(mappedBy = "categoria")
-    private List<Video> videos = new ArrayList<>();
 
     public Categoria(){}
     public Categoria(DadosCriacaoCategoria dados){
@@ -32,6 +30,10 @@ public class Categoria {
 
     @NotBlank(message = "A cor é obrigatória")
     private String cor;
+
+    @OneToMany(mappedBy = "categoria")
+    private List<Video> videos = new ArrayList<>();
+
 
     private Boolean ativo;
 

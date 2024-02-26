@@ -35,6 +35,11 @@ public class VideoController {
         return ResponseEntity.ok(videos);
     }
 
+    @GetMapping("busca")
+    public ResponseEntity<List<DadosListagemVideo>> buscarPorTitulo(@RequestParam String titulo){
+        var videos = service.findByTituloContainsIgnoreCase(titulo);
+        return ResponseEntity.ok(videos);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<DadosListagemVideo> listarPorId(@PathVariable Long id) {
