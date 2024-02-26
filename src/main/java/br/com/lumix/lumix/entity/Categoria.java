@@ -4,9 +4,17 @@ import br.com.lumix.lumix.dto.create.DadosCriacaoCategoria;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Table(name = "categorias")
 public class Categoria {
+
+    @OneToMany(mappedBy = "categoria")
+    private List<Video> videos = new ArrayList<>();
 
     public Categoria(){}
     public Categoria(DadosCriacaoCategoria dados){
@@ -26,6 +34,14 @@ public class Categoria {
     private String cor;
 
     private Boolean ativo;
+
+    public List<Video> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
+    }
 
     public Long id() {
         return id;

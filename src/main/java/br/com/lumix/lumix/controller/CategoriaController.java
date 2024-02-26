@@ -2,6 +2,7 @@ package br.com.lumix.lumix.controller;
 
 import br.com.lumix.lumix.dto.create.DadosCriacaoCategoria;
 import br.com.lumix.lumix.dto.read.DadosListagemCategoria;
+import br.com.lumix.lumix.dto.read.DadosListagemVideo;
 import br.com.lumix.lumix.dto.update.DadosAtualizacaoCategoria;
 import br.com.lumix.lumix.service.CategoriaService;
 import jakarta.validation.Valid;
@@ -42,6 +43,12 @@ public class CategoriaController {
         return ResponseEntity.ok(categoria);
     }
 
+    @GetMapping("/{id}/videos")
+    public ResponseEntity<List<DadosListagemVideo>> listarPorCategoriaId(@PathVariable Long id) {
+        var videos = service.findVideoByCategoriaId(id);
+        return ResponseEntity.ok(videos);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<DadosListagemCategoria> atualizar(@PathVariable Long id, @RequestBody DadosAtualizacaoCategoria dados) {
         var categoria = service.update(id, dados);
@@ -49,7 +56,7 @@ public class CategoriaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id){
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

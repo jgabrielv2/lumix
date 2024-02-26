@@ -1,11 +1,11 @@
 package br.com.lumix.lumix.service;
 
 import br.com.lumix.lumix.dto.create.DadosCriacaoCategoria;
-import br.com.lumix.lumix.dto.read.DadosListagemCategoria;
+import br.com.lumix.lumix.dto.read.*;
 import br.com.lumix.lumix.dto.update.DadosAtualizacaoCategoria;
 import br.com.lumix.lumix.entity.Categoria;
 import br.com.lumix.lumix.exception.CategoriaNotFoundException;
-import br.com.lumix.lumix.repository.CategoriaRepository;
+import br.com.lumix.lumix.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -14,26 +14,31 @@ import java.util.List;
 @Service
 public class CategoriaService {
 
-    private final CategoriaRepository repository;
+    private final CategoriaRepository categoriaRepository;
+    private final VideoRepository videoRepository;
 
-    public CategoriaService(CategoriaRepository repository) {
-        this.repository = repository;
+    public CategoriaService(CategoriaRepository categoriaRepository, VideoRepository videoRepository) {
+        this.categoriaRepository = categoriaRepository;
+        this.videoRepository = videoRepository;
     }
 
     @Transactional
     public DadosListagemCategoria create(DadosCriacaoCategoria dados) {
         var categoria = new Categoria(dados);
-        repository.save(categoria);
+        categoriaRepository.save(categoria);
         return new DadosListagemCategoria(categoria);
     }
 
     public List<DadosListagemCategoria> findAll() {
-        return repository.findAllByAtivoTrue().stream().map(DadosListagemCategoria::new).toList();
+        return categoriaRepository.findAllByAtivoTrue().stream().map(DadosListagemCategoria::new).toList();
     }
 
     public DadosListagemCategoria findById(Long id) {
-        var categoria = buscarCategoriaPorId(id);
-        return new DadosListagemCategoria(categoria);
+        return new DadosListagemCategoria(buscarCategoriaPorId(id));
+    }
+
+    public List<DadosListagemVideo> findVideoByCategoriaId(Long idCategoria) {
+        return videoRepository.findByCategoria_Id(idCategoria).stream().map(DadosListagemVideo::new).toList();
     }
 
     @Transactional
@@ -44,17 +49,17 @@ public class CategoriaService {
         // apos o ? será executado. Caso contrario, o codigo apos o : será executado
         categoria.setTitulo(dadosAtualizacaoCategoria.titulo() != null ? dadosAtualizacaoCategoria.titulo() : categoria.titulo());
         categoria.setCor(dadosAtualizacaoCategoria.cor() != null ? dadosAtualizacaoCategoria.cor() : categoria.cor());
-        repository.save(categoria);
+        categoriaRepository.save(categoria);
         return new DadosListagemCategoria(categoria);
     }
 
     public void delete(Long id) {
         var categoria = buscarCategoriaPorId(id);
         categoria.setAtivo(false);
-        repository.save(categoria);
+        categoriaRepository.save(categoria);
     }
 
     private Categoria buscarCategoriaPorId(Long id) {
-        return repository.findByIdAndAtivoTrue(id).orElseThrow(() -> new CategoriaNotFoundException("Não encontrado"));
+        return categoriaRepository.findByIdAndAtivoTrue(id).orElseThrow(() -> new CategoriaNotFoundException("Não encontrado"));
     }
 }
